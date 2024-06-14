@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+form div{
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+form label{
+    font-weight: bold;
+    width: 300px;
+    
+}
+form input{
+    border:solid black 2px;
+    border-radius: 10px;
+    min-width: 200px;
+}
+form .error{
+    color: red;
+    font-size: small;
+    display: block;
+    margin-left: 20px;
+   
+    
+}
+input[type="file"] {
+    border: none;
+    
+
+}
+  
+

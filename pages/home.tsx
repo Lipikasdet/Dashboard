@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import axios from "axios";
 export default function Home(props: any) {
   const { role, email, companyName } = props.data;
-  console.log(props.data);
-  // console.log(auth.currentUser?.email);
   const router = useRouter();
 
   return (
@@ -34,12 +32,11 @@ export async function getServerSideProps(context: any) {
           sessionCookie,
         }
       );
-      console.log(data, "ingetserverside");
+
       return {
         props: { data },
       };
     } catch (e) {
-      console.log(e, "eee");
       return {
         redirect: {
           destination: "/",

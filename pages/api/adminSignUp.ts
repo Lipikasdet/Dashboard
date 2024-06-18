@@ -16,14 +16,12 @@ export default async function signUpNewUser(req:NextApiRequest,res:NextApiRespon
      const userData=await firebase_admin.auth().createUser({
         email: email,
         password: password,
-        displayName: displayName,
+        displayName: displayName
       })
 
     
     await firebase_admin.auth().setCustomUserClaims(userData.uid,additionalClaims);
-    const employeeUIDs = [
-      userData.uid
-    ];  
+  
    await db.collection(companyName).doc("companyDetails").set(
            {admin:email}
      )
@@ -36,7 +34,6 @@ export default async function signUpNewUser(req:NextApiRequest,res:NextApiRespon
     }catch(e:any){
         console.log(e)
         res.status(400).json("error while signing up"+ e)
-
     }
 }
 }

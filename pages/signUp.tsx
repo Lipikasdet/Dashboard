@@ -9,6 +9,7 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [displayName, setDisplayName] = useState("");
 
   const router = useRouter();
   const handleSignUp = async (e: any) => {
@@ -19,6 +20,7 @@ export default function SignUpPage() {
         email,
         companyName,
         password,
+        displayName,
       })
       .then(() => router.push("/home"))
       .catch((e) => alert(e.response.data));
@@ -41,6 +43,18 @@ export default function SignUpPage() {
                   id="userID"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="w-full flex items-center ">
+                <label htmlFor="userID" className="w-[40%] font-semibold">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  className="border-solid border-gray-400 rounded-md border-2  p-1 "
+                  id="userID"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
                 />
               </div>
               <div className="w-full flex items-center ">

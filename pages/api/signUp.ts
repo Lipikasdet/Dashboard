@@ -3,7 +3,7 @@ import { db, firebase_admin ,field_Value} from "./firebaseAdmin";
 
 export default async function signUpNewUser(req:NextApiRequest,res:NextApiResponse){
     const body=req.body;
-    const {email,displayName,role,projects,manager,managerEmail}=body;  
+    const {email,displayName,role,projects,manager,managerEmail,companyName,createdBy}=body;  
     const password="123456";
     const additionalClaims={role,projects};
     if(req.method=='POST'){
@@ -13,7 +13,7 @@ export default async function signUpNewUser(req:NextApiRequest,res:NextApiRespon
         password: password,
         displayName: displayName,
       })
-      const dataToStore=role=="manager"?{email,displayName,role,projects,teamMembers:[],createdAt:field_Value.serverTimestamp()}:{email,displayName,role,manager,projects,createdAt:field_Value.serverTimestamp()}
+      const dataToStore=role=="manager"?{email,displayName,role,projects,teamMembers:[],createdAt:field_Value.serverTimestamp(),companyName,createdBy}:{email,displayName,role,manager,projects,createdAt:field_Value.serverTimestamp(),companyName,createdBy}
     //   const userUID = await firebase_admin.auth().getUser(userData.uid);
     await firebase_admin.auth().setCustomUserClaims(userData.uid,additionalClaims)
     await db.collection(email).doc("employeeData").set(dataToStore)

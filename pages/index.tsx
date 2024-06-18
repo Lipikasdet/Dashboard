@@ -13,7 +13,7 @@ const LoginPage = () => {
   const handleLogin = async (e: any) => {
     e.preventDefault();
     const role = await signIn(userID, password);
-    role == "admin" ? router.push("/admin") : router.push("/home");
+    role == "admin" ? router.push(`/admin`) : router.push("/home");
   };
   console.log(auth.currentUser?.email, "inLogin");
 

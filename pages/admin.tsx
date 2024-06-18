@@ -1,27 +1,33 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-export default function Admin() {
+export default function Admin(props: { data: any }) {
+  const { email: emailOfUser, role: roleOfUser, companyName } = props.data;
   const [email, setUserEmail] = useState("");
   const [displayName, setUserName] = useState("");
   const [role, setRole] = useState("manager");
   const [manager, setManager] = useState("");
   const [managerList, setManagerList] = useState([]);
-  const [managerEmail, setManagerEmail] = useState("");
+  const [managerEmail, setManagerEmail] = useState("abc");
   const [usersList, setUsersList] = useState([]);
   const [projectList, setProjectList] = useState("");
+  interface userList {
+    email: string;
+    displayName: string;
+    role: string;
+  }
   async function getUsersList() {
-    const { data } = await axios.get("/api/usersList");
+    const { data } = await axios.get(`/api/usersList?company=${companyName}`);
     setUsersList(data);
   }
   useEffect(() => {
     getUsersList();
   }, []);
   useEffect(() => {
-    setManagerList(usersList.filter((item: any) => item.role === "manager"));
+    setManagerList(
+      usersList.filter((item: userList) => item.role === "manager")
+    );
   }, [usersList]);
-  async function deleteUser(uid: string) {
-    axios.post("/api/deleteUser", { uid });
-  }
+
   async function signUpFunction() {
     const dataToSend = {
       email,
@@ -29,15 +35,26 @@ export default function Admin() {
       role,
       manager,
       managerEmail,
+      companyName,
+      createdBy: emailOfUser,
       projects: projectList.split(","),
     };
-    const { data } = await axios.post("/api/signUp", dataToSend);
+    try {
+      await axios.post("/api/signUp", dataToSend);
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
   }
-  function handleSelectChange(e: any) {
+  function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setRole(e.target.value);
   }
-  function handleSelectManagerChange(e: any) {
-    setManager(e.target.value);
+  function handleSelectManagerChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const { value } = e.target;
+    setManager(value);
+    const isManagerPresent: any = managerList.find(
+      (item: userList) => item.displayName == value
+    );
+    isManagerPresent && setManagerEmail(isManagerPresent.email);
   }
   return (
     <div className="h-screen w-full flex justify-center items-center">
@@ -52,7 +69,9 @@ export default function Admin() {
             className="border-solid border-black border-2 "
             id="userID"
             value={displayName}
-            onChange={(e) => setUserName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setUserName(e.target.value)
+            }
           />
         </div>
         <div className="mt-5 flex">
@@ -64,7 +83,9 @@ export default function Admin() {
             className="border-solid border-black border-2"
             id="userID"
             value={email}
-            onChange={(e) => setUserEmail(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setUserEmail(e.target.value)
+            }
           />
         </div>
         <div className="mt-5 flex">
@@ -87,19 +108,18 @@ export default function Admin() {
               value={manager}
               onChange={handleSelectManagerChange}
             >
-              {managerList.map((item: any) => (
-                <option key={item.email} value={item.displayName}>
+              {managerList.map((item: userList) => (
+                <option
+                  key={item.email}
+                  value={item.displayName}
+                  onClick={() => {
+                    setManagerEmail(item.email);
+                  }}
+                >
                   {item.displayName}
                 </option>
               ))}
             </select>
-            {/* <input
-              type="text"
-              className="border-solid border-black border-2"
-              id="manager"
-              value={manager}
-              onChange={(e: any) => setManager(e.target.value)}
-            /> */}
           </div>
         )}
         <div className="mt-5 flex">
@@ -124,20 +144,42 @@ export default function Admin() {
         <div>
           UsersList
           <br />
-          {usersList.map((item: any) => (
-            <>
-              {item.displayName}
-              {/* <button
-                className="bg-red-500 m-3"
-                onClick={() => deleteUser(item.uid)}
-              >
-                Delete
-              </button> */}
-              <br />
-            </>
+          {usersList.map((item: userList) => (
+            <div key={item.email}>{item.displayName}</div>
           ))}
         </div>
       </div>
     </div>
   );
+}
+export async function getServerSideProps(context: any) {
+  const sessionCookie = context.req.cookies.sessionCookie;
+  if (sessionCookie) {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/verifySessionCookie",
+        {
+          sessionCookie,
+        }
+      );
+
+      return {
+        props: { data },
+      };
+    } catch (e) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    }
+  } else {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 }

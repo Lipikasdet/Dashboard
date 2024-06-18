@@ -6,10 +6,8 @@ export default function session(req:NextApiRequest,res:NextApiResponse){
   const sessionCookie=req.body.sessionCookie;
     firebase_admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */)
   .then((decodedToken:any) => {
-    console.log('Decoded claims:', decodedToken);
-   
-    res.status(200).json(decodedToken)
-    
+    const {role,email,companyName,email_verified}=decodedToken
+    res.status(200).json({role,email,companyName,email_verified}) 
   })
   .catch((error:any) => {
   

@@ -1,33 +1,17 @@
 import { useEffect, useState } from "react";
-import { auth } from "../src/firebase/firebaseAuth";
 import { useRouter } from "next/router";
 import axios from "axios";
 export default function Home(props: any) {
-  const { role, email } = props.data;
-
+  const { role, email, companyName } = props.data;
+  console.log(props.data);
   // console.log(auth.currentUser?.email);
   const router = useRouter();
-  const [posts, setPosts] = useState<any>();
-  useEffect(() => {
-    getData();
-  }, []);
-  async function getData() {
-    const data = await fetch("/api/posts");
-    const response = await data.json();
-    setPosts(response);
-  }
-  async function deletePostData(id: string) {
-    const data = await fetch("/api/posts", {
-      method: "DELETE",
-      body: JSON.stringify({ docRefId: id }),
-    });
-    const response = await data.json();
-  }
 
   return (
     <div>
       <div>email: {email}</div>
-      <div>role:{role}</div>
+      {role && <div>role:{role}</div>}
+      {companyName && <div>companyName:{companyName}</div>}
       <button
         onClick={() => {
           axios.get("/api/signOut").then(() => router.push("/"));
@@ -35,23 +19,8 @@ export default function Home(props: any) {
       >
         SignOut
       </button>
-      <br />
-      {/* {posts &&
-        posts.map((item: any) => (
-          <>
-            {item.docData.content}
 
-            {
-              <button
-                className="bg-yellow-500"
-                onClick={() => deletePostData(item.docRefId)}
-              >
-                Delete
-              </button>
-            }
-            <br />
-          </>
-        ))} */}
+      <br />
     </div>
   );
 }

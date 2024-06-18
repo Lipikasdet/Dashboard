@@ -1,16 +1,19 @@
 // pages/LoginPage.js
 
 import React, { useState } from "react";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import { auth } from "../src/firebase/firebaseAuth";
 import signIn from "@/src/firebase/signIn";
+import { useRouter } from "next/router";
 import axios from "axios";
 const LoginPage = () => {
   const [userID, setUserID] = useState("");
   const [password, setPassword] = useState("");
-  const handleLogin = (e: any) => {
+  const router = useRouter();
+  const handleLogin = async (e: any) => {
     e.preventDefault();
-    signIn(userID, password);
+    const role = await signIn(userID, password);
+    role == "admin" ? router.push("/admin") : router.push("/home");
   };
   console.log(auth.currentUser?.email, "inLogin");
 
@@ -28,6 +31,7 @@ const LoginPage = () => {
             onChange={(e) => setUserID(e.target.value)}
           />
         </div>
+
         <div>
           <label htmlFor="password">Password:</label>
           <input
@@ -38,7 +42,12 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+
         <button type="submit">Login</button>
+        <br />
+        <Link href="/signUp">
+          <button>Signup</button>
+        </Link>
       </form>
     </div>
   );

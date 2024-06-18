@@ -15,7 +15,7 @@ export default function SignUpPage() {
     e.preventDefault();
     // signUp(email, password);
     axios
-      .post("/api/signUp", {
+      .post("/api/adminSignUp", {
         email,
         companyName,
         password,
@@ -70,12 +70,12 @@ export default function SignUpPage() {
               </div>
               <button
                 onClick={handleSignUp}
-                className="bg-black text-white  rounded-md py-1"
+                className="bg-black text-white rounded-md py-1"
               >
                 Sign up
               </button>
               <Link
-                href="/login"
+                href="/"
                 className="flex w-full justify-between   text-sm font-semibold text-zinc-600 "
               >
                 Click here to login

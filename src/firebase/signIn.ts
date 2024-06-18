@@ -1,28 +1,27 @@
 import { signInWithEmailAndPassword, signOut} from "firebase/auth";
 import { auth } from "./firebaseAuth";
+import axios from "axios";
 
-export default async function signIn(email:string,password:string) {
-    let result = null;
-     
-      try{
-        result =await  signInWithEmailAndPassword(auth,email,password);
-        const accesstoken=await auth.currentUser?.getIdToken();
-        fetch("/api/session",{method:"POST",body:JSON.stringify({idToken:accesstoken})})
-        .then((data)=>{
-          console.log(data)
-            signOut(auth)
-            window.location.assign('/home');
-        })
-        .catch((error)=>console.log(error))
-        
-  
-      }catch(e:any){ 
-       
-         return ({error:e.code.substr(5,)}) 
 
-      }
+export default async function signIn(email: string, password: string) {
+  try {
+    // Perform sign in with email and password
+    await signInWithEmailAndPassword(auth, email, password);
+    
+    // Get the ID token of the currently signed-in user
+    const idToken = await auth.currentUser?.getIdToken();
+
+    // Send the ID token to your server to create a session
+    const response = await axios.post('/api/session', { idToken });
+
+    // Sign out the user
+    await signOut(auth);
+
+    // Return the result (e.g., user role)
+    return response.data.role;
+  } catch (error) {
+    console.error('Error during sign-in:', error);
+    throw error; // Propagate the error to the caller
+  }
 }
-
-
-
 

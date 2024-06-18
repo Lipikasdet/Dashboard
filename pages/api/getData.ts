@@ -1,4 +1,3 @@
-import { doc, getDoc } from "firebase/firestore";
 import { NextApiRequest,NextApiResponse } from "next";
 import { db } from "./firebaseAdmin";
 export default async function GetData(req:NextApiRequest,res:NextApiResponse){
@@ -21,7 +20,8 @@ console.log("No such document!");
     const {projectName,initialDate,client,manager,fileDetails}=req.body;
     const projectDetails={projectName,initialDate,client,manager};
     try{   
-    const projectRef   = db.collection('projects').doc(projectName);
+    const projectRef   = db.collection('sdet/companyDetails/projects').doc(projectName);
+    // const projectRef=db.collection("sdet").doc("projects").
     await projectRef.set(projectDetails)
        
 

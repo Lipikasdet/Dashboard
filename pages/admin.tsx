@@ -31,17 +31,13 @@ export default function Admin() {
       managerEmail,
       projects: projectList.split(","),
     };
-    console.log(dataToSend, "datatTosend");
     const { data } = await axios.post("/api/signUp", dataToSend);
   }
   function handleSelectChange(e: any) {
     setRole(e.target.value);
   }
   function handleSelectManagerChange(e: any) {
-    const { email, displayName } = JSON.parse(e.target.value);
-    setManager(displayName);
-    setManagerEmail(email);
-    console.log(manager, managerEmail);
+    setManager(e.target.value);
   }
   return (
     <div className="h-screen w-full flex justify-center items-center">

@@ -2,13 +2,13 @@ import { getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 const firebaseConfig = {
-  apiKey: "AIzaSyCdmsodLvRHk8H25-PqUVrftgVM9lLXS34",
-  authDomain: "kpid-31ea0.firebaseapp.com",
-  projectId: "kpid-31ea0",
-  storageBucket: "kpid-31ea0.appspot.com",
-  messagingSenderId: "314429389072",
-  appId: "1:314429389072:web:d3134ba24ff816d5514d95",
-  measurementId: "G-S8DVRNV71K"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authdomainKey: process.env.NEXT_PUBLIC_AUTHDOMAIN_KEY,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET_DETAILS,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID
 };
 
 export let firebase_app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];

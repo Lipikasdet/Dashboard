@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse} from 'next'
 import { doc, getDoc } from 'firebase/firestore';
-import { auth } from '@/src/firebase/firebaseAuth';
+// import { auth } from '@/src/firebase/firebaseAuth';
 import { db } from "./firebaseAdmin";
 
 interface ProjectDetails {

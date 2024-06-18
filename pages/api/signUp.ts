@@ -5,6 +5,7 @@ export default async function signUpNewUser(req:NextApiRequest,res:NextApiRespon
     const body=req.body;
     const {email,displayName,role,projects,manager,managerEmail,companyName,createdBy}=body;  
     const password="123456";
+    console.log(role,"roleIn")
     const additionalClaims={role,projects};
     if(req.method=='POST'){
     try{

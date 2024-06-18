@@ -7,7 +7,7 @@ export default function Admin(props: { data: any }) {
   const [role, setRole] = useState("manager");
   const [manager, setManager] = useState("");
   const [managerList, setManagerList] = useState([]);
-  const [managerEmail, setManagerEmail] = useState("abc");
+  const [managerEmail, setManagerEmail] = useState("");
   const [usersList, setUsersList] = useState([]);
   const [projectList, setProjectList] = useState("");
   interface userList {
@@ -48,6 +48,7 @@ export default function Admin(props: { data: any }) {
   function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setRole(e.target.value);
   }
+
   function handleSelectManagerChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const { value } = e.target;
     setManager(value);
@@ -108,14 +109,11 @@ export default function Admin(props: { data: any }) {
               value={manager}
               onChange={handleSelectManagerChange}
             >
+              <option value="dontselect" hidden>
+                Select
+              </option>
               {managerList.map((item: userList) => (
-                <option
-                  key={item.email}
-                  value={item.displayName}
-                  onClick={() => {
-                    setManagerEmail(item.email);
-                  }}
-                >
+                <option key={item.email} value={item.displayName}>
                   {item.displayName}
                 </option>
               ))}

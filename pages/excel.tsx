@@ -1,5 +1,3 @@
-     
-
 import { collection, doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
@@ -16,7 +14,7 @@ const Dashboard: React.FC = () => {
     const reader = new FileReader();
     reader.onload = (event) => {
       const data = new Uint8Array(event.target?.result as ArrayBuffer);
-      const workbook = XLSX.read(data, { type:"array" });
+      const workbook = XLSX.read(data, { type: "array" });
       const allSheetData: { sheetName: string; data: string[][] }[] = [];
       workbook.SheetNames.forEach((sheetName) => {
         const sheet = workbook.Sheets[sheetName];
@@ -36,26 +34,23 @@ const Dashboard: React.FC = () => {
   ) => {
     data.forEach(async (sheetData) => {
       try {
-        const collectionRef = collection(firestore, "projects/project1/excel");
+        const collectionRef = collection(
+          firestore,
+          "projects/project1/sprintData"
+        );
         const docRef = doc(collectionRef, sheetData.sheetName);
         const columnData = sheetData.data[0];
-        console.log(
-          sheetData.data.slice(1).forEach((item, index) => {
-            item[0];
-          }),
-          
-        );
+
         const formattedData = sheetData.data.slice(1).map((row, index) => {
           const obj: { [key: string]: string } = {};
           row.forEach((value, index) => {
             obj[`${columnData[index]}`] = value; // Assign eac   h value to a key like 'column_1', 'column_2', etc.
           });
           return obj;
-        
         });
-        await setDoc(docRef,{data:formattedData});
-  
-        
+
+        await setDoc(docRef, { data: formattedData });
+
         console.log(sheetData.data, "Entire data");
         console.log(`Data for ${sheetData.sheetName} uploaded successfully.`);
       } catch (error) {

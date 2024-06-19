@@ -17,3 +17,4 @@ export const firebase_admin = admin.apps.length > 0 ? admin.apps[0] : admin.init
     databaseURL: 'https://assets-658b7.firebaseio.com'
 });
 export const db=firebase_admin.firestore();
+export const field_Value=admin.firestore.FieldValue;

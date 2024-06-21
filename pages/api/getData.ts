@@ -20,7 +20,7 @@ console.log("No such document!");
     const {projectName,initialDate,client,manager,fileDetails}=req.body;
     const projectDetails={projectName,initialDate,client,manager};
     try{   
-    const projectRef   = db.collection('sdet/companyDetails/projects').doc(projectName);
+    const projectRef   = db.collection('projects').doc(projectName);
     // const projectRef=db.collection("sdet").doc("projects").
     await projectRef.set(projectDetails)
        
@@ -56,9 +56,6 @@ console.log("No such document!");
         );
       }
     })
-
-
- 
 }catch(error){
     console.error(error)
     res.status(400).json(error)

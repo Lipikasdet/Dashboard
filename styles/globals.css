@@ -2,15 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-form div{
+form .formElement{
     display: flex;
     margin-bottom: 10px;
     align-items: center;
 }
 
-form label{
-    font-weight: bold;
+.formElement label{
+    font-weight:500;
     width: 300px;
+    
     
 }
 form input{
@@ -18,6 +19,7 @@ form input{
     border-radius: 10px;
     min-width: 200px;
 }
+
 form .error{
     color: red;
     font-size: small;
@@ -31,5 +33,18 @@ input[type="file"] {
     
 
 }
-  
+/* select tag */
+.tag {
+    display: inline-block;
+    padding: 5px;
+    margin: 5px;
+    background-color: #ddd;
+    border-radius: 5px;
+  } bb    
+  button {
+    margin-left: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
 

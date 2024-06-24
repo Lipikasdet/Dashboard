@@ -1,6 +1,6 @@
 import { getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification as sendVerificationEmail } from "firebase/auth";
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authdomainKey: process.env.NEXT_PUBLIC_AUTHDOMAIN_KEY,
@@ -14,4 +14,6 @@ const firebaseConfig = {
 export let firebase_app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 const firestore = getFirestore(firebase_app)
 const auth = getAuth(firebase_app);
-export { auth, firestore}
+export const createUserWithEmail = createUserWithEmailAndPassword; //
+export const sendEmailVerification = sendVerificationEmail
+export { auth, firestore};

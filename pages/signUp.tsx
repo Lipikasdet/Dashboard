@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Link from "next/link";
+import { adminSignUp } from "@/src/firebase/signUp";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -15,15 +16,25 @@ export default function SignUpPage() {
   const handleSignUp = async (e: any) => {
     e.preventDefault();
     // signUp(email, password);
-    axios
-      .post("/api/adminSignUp", {
-        email,
-        companyName,
-        password,
-        displayName,
-      })
-      .then(() => router.push("/home"))
-      .catch((e) => alert(e.response.data));
+    const signUpData = {
+      email,
+      companyName,
+      password,
+      displayName,
+    };
+    try {
+      const result = await adminSignUp(signUpData);
+
+      if (result.isSignUpSuccess) {
+        router.push("/");
+        // Optionally redirect the user or clear the form
+      } else {
+        throw result.error; // This will be caught by the catch block
+      }
+    } catch (error) {
+      console.log(error);
+      alert("signuo failed");
+    }
   };
 
   return (

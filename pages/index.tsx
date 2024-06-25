@@ -12,8 +12,12 @@ const LoginPage = () => {
   const router = useRouter();
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    const role = await signIn(userID, password);
-    role == "admin" ? router.push(`/admin`) : router.push("/home");
+    try {
+      const role = await signIn(userID, password);
+      role == "admin" ? router.push(`/admin`) : router.push("/home");
+    } catch (error: any) {
+      alert("Error while signin:" + " " + error.message);
+    }
   };
 
   return (

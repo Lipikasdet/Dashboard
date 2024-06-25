@@ -1,41 +1,67 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { db, firebase_admin ,field_Value} from "./firebaseAdmin";
+import { db, firebase_admin, field_Value } from "./firebaseAdmin";
 
-export default async function signUpNewUser(req:NextApiRequest,res:NextApiResponse){
-    const body=req.body;
-    const {email,displayName,role,manager,managerEmail,companyName,createdBy}=body;  
-    const password="123456";
-    console.log(role,"roleIn")
-    const additionalClaims={role};
-    if(req.method=='POST'){
-    try{
-     const userData=await firebase_admin.auth().createUser({
-        email: email,
-        password: password,
-        displayName: displayName,
-      })
-      const dataToStore=role=="manager"?{email,displayName,role,projects:[],teamMembers:[],createdAt:field_Value.serverTimestamp(),companyName,createdBy}:{email,displayName,role,manager,projects:[],createdAt:field_Value.serverTimestamp(),companyName,createdBy}
-    await firebase_admin.auth().setCustomUserClaims(userData.uid,additionalClaims)
-    await db.collection(email).doc("employeeData").set(dataToStore)
-    if(role!="manager"){
-        const managerRef=await db.collection(managerEmail).doc("employeeData")
+export default async function signUpNewUser(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const body = req.body;
+  const {
+    email,
+    displayName,
+    role,
+    manager,
+    managerEmail,
+    companyName,
+    createdBy,
+  } = body;
+  const additionalClaims = { role, companyName };
+  if (req.method == "POST") {
+    try {
+      const userRecord = await firebase_admin.auth().getUserByEmail(email);
+      const uid = userRecord.uid;
+      await firebase_admin.auth().setCustomUserClaims(uid, additionalClaims);
+
+      const dataToStore =
+        role == "manager"
+          ? {
+              email,
+              displayName,
+              role,
+              projects: [],
+              teamMembers: [],
+              createdAt: field_Value.serverTimestamp(),
+              companyName,
+              createdBy,
+            }
+          : {
+              email,
+              displayName,
+              role,
+              manager,
+              projects: [],
+              createdAt: field_Value.serverTimestamp(),
+              companyName,
+              createdBy,
+            };
+      await db.collection(email).doc("employeeData").set(dataToStore);
+      if (role != "manager") {
+        const managerRef = await db
+          .collection(managerEmail)
+          .doc("employeeData");
         await managerRef.update({
-            teamMembers:field_Value.arrayUnion({displayName,email})
-        })
-    }
-   
-   
-    const employeeRef=await db.collection("sdet").doc("employeeDetails");
-    await employeeRef.update(
-        {
-            data:field_Value.arrayUnion({displayName,email,role})
-           }
-        )
-       res.status(200).json("User created successfully")
+          teamMembers: field_Value.arrayUnion({ displayName, email }),
+        });
+      }
 
-    }catch(e:any){
-        console.log(e)
-        res.status(400).json("error while signing up"+ e)
-    }  
-}
+      const employeeRef = await db.collection("sdet").doc("employeeDetails");
+      await employeeRef.update({
+        data: field_Value.arrayUnion({ displayName, email, role }),
+      });
+      res.status(200).json("User created successfully");
+    } catch (e: any) {
+      console.log(e);
+      res.status(400).json("error while signing up" + e);
+    }
+  }
 }

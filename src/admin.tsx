@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Form from "@/src/components/projectForm";
+import { UserSignUp } from "./firebase/signUp";
 export default function Admin(props: { data: any }) {
-  const { email: emailOfUser, role: roleOfUser, companyName } = props.data;
+  const { email: emailOfUser, companyName } = props.data;
   const [email, setUserEmail] = useState("");
   const [displayName, setUserName] = useState("");
   const [role, setRole] = useState("manager");
@@ -50,9 +51,16 @@ export default function Admin(props: { data: any }) {
       createdBy: emailOfUser,
     };
     try {
-      await axios.post("/api/signUp", dataToSend);
-    } catch (error: any) {
-      console.log(error.response.data);
+      const result = await UserSignUp(dataToSend);
+
+      if (result.isSignUpSuccess) {
+        // Optionally redirect the user or clear the form
+      } else {
+        throw result.error; // This will be caught by the catch block
+      }
+    } catch (error) {
+      console.log(error);
+      alert("signup of user failed");
     }
   }
   function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {

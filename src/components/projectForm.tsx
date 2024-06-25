@@ -2,22 +2,32 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as XLSX from "xlsx";
-
-export default function Form() {
+import Select from "react-select";
+export default function Form({ managerList }: { managerList: any }) {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
+
+  const [selectedManagers, setSelectedManagers] = useState<any>();
+
+  const handleChange = (selected: any) => {
+    setSelectedManagers(selected);
+  };
   const [fileDetails, setFileDetails] =
     useState<{ sheetName: string; data: string[][] }[]>();
   const onSubmit = (data: any) => {
-    const { projectName, initialDate, manager, client } = data;
-    axios.post("/api/getData", {
+    const { projectName, initialDate, client } = data;
+    const modifiedList: any = [];
+    selectedManagers.map((item: any) =>
+      modifiedList.push({ email: item.value, name: item.label })
+    );
+    console.log(modifiedList);
+    axios.post("/api/postProjectData", {
       projectName,
       initialDate,
-      manager,
+      managers: modifiedList,
       client,
       fileDetails,
     });
@@ -48,40 +58,39 @@ export default function Form() {
   return (
     <div className="m-5 ">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+        <div className="formElement">
           <label htmlFor="projectName">Project Name</label>
           <input
+            required
             id="projectName"
             {...register("projectName", { required: true })}
           />
         </div>
 
-        <div>
+        <div className="formElement">
           <label htmlFor="initialDate">Initial Date</label>
           <input
+            required
             id="initialDate"
             type="date"
             {...register("initialDate", { required: true })}
           />
-          {errors.lastName && <p className="error">Last name is required.</p>}
         </div>
 
-        <div>
-          <label htmlFor="manager">Manager</label>
-          <input id="manager" {...register("manager")} />
-        </div>
-        <div>
+        <div className="formElement">
           <label htmlFor="client">Client</label>
           <input
+            required
             id="client"
             {...register("client", {
               required: true,
             })}
           />
         </div>
-        <div>
+        <div className="formElement">
           <label htmlFor="file">Upload Files</label>
           <input
+            required
             id="file"
             type="file"
             {...register("excel", {
@@ -90,8 +99,20 @@ export default function Form() {
             })}
           />
         </div>
+        <div>
+          <label className="font-semibold">Select Managers</label>
+          <Select
+            isMulti
+            required
+            className="flex flex-col font-semibold"
+            id="managers"
+            value={selectedManagers}
+            onChange={handleChange}
+            options={managerList}
+          />
+        </div>
 
-        <input type="submit" />
+        <input type="submit" className="cursor-pointer m-5" />
       </form>
     </div>
   );

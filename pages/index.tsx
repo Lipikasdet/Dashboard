@@ -12,10 +12,13 @@ const LoginPage = () => {
   const router = useRouter();
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    const role = await signIn(userID, password);
-    role == "admin" ? router.push(`/admin`) : router.push("/home");
+    try {
+      const role = await signIn(userID, password);
+      role == "admin" ? router.push(`/admin`) : router.push("/home");
+    } catch (error: any) {
+      alert("Error while signin:" + " " + error.message);
+    }
   };
-  console.log(auth.currentUser?.email, "inLogin");
 
   return (
     <div>
@@ -55,13 +58,29 @@ const LoginPage = () => {
 
 export default LoginPage;
 export async function getServerSideProps(context: any) {
-  if (context.req.cookies.sessionCookie) {
-    return {
-      redirect: {
-        destination: "/home",
-        permanent: false,
-      },
-    };
+  const sessionCookie = context.req.cookies.sessionCookie;
+
+  if (sessionCookie) {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/verifySessionCookie",
+        {
+          sessionCookie,
+        }
+      );
+      const { role } = data;
+
+      return {
+        redirect: {
+          destination: role == "admin" ? "/admin" : "/home",
+          permanent: false,
+        },
+      };
+    } catch (e) {
+      return {
+        props: {},
+      };
+    }
   } else {
     return {
       props: {},

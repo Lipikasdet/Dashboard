@@ -6,6 +6,7 @@ interface ProjectDetails {
   initialDate: string;
   client: string;
   manager: string;
+  companyName: string;
 }
 
 interface SprintData {
@@ -13,7 +14,13 @@ interface SprintData {
     [field: string]: string;
   };
 }
-const Dashboard = ({ projectName }: { projectName: string }) => {
+const Dashboard = ({
+  projectName,
+  companyName,
+}: {
+  projectName: string;
+  companyName: string;
+}) => {
   const [data, setData] = useState<{
     projectDetails: ProjectDetails | null;
     sprintData: SprintData;
@@ -21,8 +28,9 @@ const Dashboard = ({ projectName }: { projectName: string }) => {
   const [loading, setLoading] = useState(true);
   const fetchData = async () => {
     try {
+      console.log(companyName);
       const response = await fetch(
-        `/api/sheetData?projectName=${encodeURIComponent(projectName)}`
+        `/api/sheetData?projectName=${projectName}&companyName=${companyName}`
       );
       if (!response.ok) {
         throw new Error(`Error:${response.statusText}`);

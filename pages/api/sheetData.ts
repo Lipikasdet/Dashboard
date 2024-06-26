@@ -16,14 +16,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const { projectName } = req.query;
+    const { projectName,companyName} = req.query;
     console.log(projectName);
     if (!projectName) {
       res.status(400).json({ error: "Missing projectName parameter" });
       return;
     }
     try {
-      const projectRef = db.collection("projects").doc(projectName as string);
+      const projectRef = db.collection(`${companyName}/companyDetails/projects`).doc(projectName as string);
       const projectDoc = await projectRef.get();
       if (!projectDoc.exists) {
         res.status(404).json({ error: "Project not found" });

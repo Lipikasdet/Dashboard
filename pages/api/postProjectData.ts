@@ -6,11 +6,11 @@ export default async function GetData(
   res: NextApiResponse
 ) {
   if (req.method == "POST") {
-    const { projectName, initialDate, client, managers, fileDetails } =
+    const { projectName, initialDate, client, managers, fileDetails ,companyName} =
       req.body;
     const projectDetails = { projectName, initialDate, client, managers };
     try {
-      const projectRef = db.collection("projects").doc(projectName);
+      const projectRef = db.collection(`${companyName}/companyDetails/projects`).doc(projectName);
       await projectRef.set(projectDetails);
       // To update manager projects array in their respective collection of manager email
       managers.forEach(async (item: any) => {

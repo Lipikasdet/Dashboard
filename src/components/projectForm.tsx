@@ -3,7 +3,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as XLSX from "xlsx";
 import Select from "react-select";
-export default function Form({ managerList }: { managerList: any }) {
+export default function Form({
+  managerList,
+  companyName,
+}: {
+  managerList: any;
+  companyName: string;
+}) {
   const {
     register,
     handleSubmit,
@@ -30,6 +36,7 @@ export default function Form({ managerList }: { managerList: any }) {
       managers: modifiedList,
       client,
       fileDetails,
+      companyName,
     });
     console.log(fileDetails, "submit");
     // Now you can use these variables for further processing

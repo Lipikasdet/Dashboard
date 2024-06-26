@@ -156,7 +156,7 @@ export default function Admin(props: { data: any }) {
           </div>
         </div>
       </div>
-      <Form managerList={managerListOptions} />
+      <Form managerList={managerListOptions} companyName={companyName} />
     </div>
   );
 }

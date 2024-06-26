@@ -63,7 +63,7 @@ export default function Form({
   };
   // const inputValue = watch("manager", "ui");
   return (
-    <div className="m-5 ">
+    <div className="w-[50%] m-auto">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="formElement">
           <label htmlFor="projectName">Project Name</label>

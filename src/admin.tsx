@@ -29,6 +29,7 @@ export default function Admin(props: { data: any }) {
     setManagerList(
       usersList.filter((item: userList) => item.role === "manager")
     );
+    console.log(managerListOptions, usersList);
     managerListForSelect();
   }, [usersList]);
 
@@ -54,7 +55,7 @@ export default function Admin(props: { data: any }) {
       const result = await UserSignUp(dataToSend);
 
       if (result.isSignUpSuccess) {
-        // Optionally redirect the user or clear the form
+        alert("Email verification sent ");
       } else {
         throw result.error; // This will be caught by the catch block
       }

@@ -54,13 +54,13 @@ export default async function signUpNewUser(
         });
       }
 
-      const employeeRef = await db.collection("sdet").doc("employeeDetails");
+      const employeeRef = await db.collection(companyName).doc("employeeDetails");
       await employeeRef.update({
         data: field_Value.arrayUnion({ displayName, email, role }),
       });
       res.status(200).json("User created successfully");
     } catch (e: any) {
-      console.log(e);
+      console.log(e)
       res.status(400).json("error while signing up" + e);
     }
   }

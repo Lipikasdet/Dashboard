@@ -1,9 +1,29 @@
 import Admin from "@/src/admin";
 import axios from "axios";
+import router from "next/router";
 export default function AdminPage(props: { data: any }) {
+  function signOut() {
+    try {
+      axios.get("/api/signOut").then(() => router.push("/"));
+    } catch (error) {
+      alert("Error while signing out");
+    }
+  }
   return (
-    <div className="h-screen w-full flex justify-center items-center">
-      <Admin data={props.data} />
+    <div>
+      <div className="flex flex-row-reverse w-full mb-5">
+        <button
+          className="bg-blue-200 p-1 rounded-md font-semibold"
+          onClick={signOut}
+        >
+          SignOut
+        </button>
+
+        <br />
+      </div>
+      <div>
+        <Admin data={props.data} />
+      </div>
     </div>
   );
 }

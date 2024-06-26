@@ -11,16 +11,14 @@ interface managerData {
   createdAt: string;
 }
 export default function ManagerUI({ data }: { data: managerData }) {
-  console.log(data);
-
-  const { projects, displayName, email } = data;
+  const { projects, displayName, email, companyName } = data;
   const [projectData, setProjectData] = useState<any>();
 
   const [projectSelected, setProjectSelected] = useState(projects[0]);
   async function onProjectChange(projectSelected: string) {
     try {
       const response = await fetch(
-        `/api/sheetData?projectName=${projectSelected}`
+        `/api/sheetData?projectName=${projectSelected}&companyName=${companyName}`
       );
       if (!response.ok) {
         throw new Error(`Error:${response.statusText}`);
@@ -56,7 +54,7 @@ export default function ManagerUI({ data }: { data: managerData }) {
           </>
         ))}
       </div>
-      <ProjectData projectName={projectSelected} />
+      <ProjectData projectName={projectSelected} companyName={companyName} />
     </div>
   );
 }
